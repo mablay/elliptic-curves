@@ -2,7 +2,7 @@ const scale = {x: 70, y: 70}
 const offset = {x: 0, y: 0}
 const params = {a: -1, b: 1}
 const positions = []
-let MAX_POS = 3
+let MAX_POS = 4
 
 function setup() {
   createCanvas(480, 640)
@@ -25,11 +25,14 @@ function updateParam(param, value) {
 }
 
 function keyPressed() {
+  // console.log(keyCode)
   if (keyCode === 189) {
     MAX_POS--
     positions.pop()
   } else if (keyCode === 187) {
     MAX_POS++
+  } else if (keyCode === 67) {
+    positions.length = 0
   }
 }
 
@@ -105,7 +108,10 @@ function drawMouseIntersection () {
 function mouseClicked() {
   const pos = mouseIntersection()
   if (!pos) return
-  positions.push(pos)
+  if (positions.length === 0) {
+    return positions.push(pos)
+  }
+  positions[1] = pos
 }
 
 function drawCurve(a, b) {
