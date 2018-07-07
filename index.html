@@ -1,6 +1,7 @@
 <html>
 <head>
 <title>Elliptic Curve</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>body {margin: 0; background-color: black; color: white}</style>
 </head>
 <body>
@@ -12,7 +13,6 @@
     class="slider"
     onchange="updateParam('a', this.value)"
   />
-  </br>
   <span>b: </span><input
     type="range"
     min="-10"
@@ -21,6 +21,15 @@
     value="1"
     class="slider"
     onchange="updateParam('b', this.value)"
+  />
+  <span>n: </span><input
+    type="range"
+    min="3"
+    max="10"
+    step="1"
+    value="3"
+    class="slider"
+    onchange="updateParam('n', this.value)"
   />
   </br>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>

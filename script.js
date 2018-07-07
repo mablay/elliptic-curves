@@ -1,10 +1,11 @@
-const scale = {x: 50, y: 50}
+const scale = {x: 70, y: 70}
 const offset = {x: 0, y: 0}
 const params = {a: -1, b: 1}
 const positions = []
+let MAX_POS = 3
 
 function setup() {
-  createCanvas(640, 480)
+  createCanvas(480, 640)
   background(0)
   offset.x = (width / 2) / scale.x
   offset.y = (height / 2) / scale.y
@@ -13,7 +14,20 @@ function setup() {
 function updateParam(param, value) {
   background(0)
   positions.length = 0
+  if (param === 'n') {
+    MAX_POS = value
+    return
+  }
   params[param] = parseFloat(value)
+}
+
+function keyPressed() {
+  if (keyCode === LEFT_ARROW) {
+    MAX_POS--
+    positions.pop()
+  } else if (keyCode === RIGHT_ARROW) {
+    MAX_POS++
+  }
 }
 
 function mouseMoved() {
@@ -39,7 +53,6 @@ function drawPositions () {
 
 function generatePositions () {
   if (positions.length < 2) return
-  const MAX_POS = 10
   let old = positions[0]
   for (let i = 1; i < MAX_POS; i++) {
     const pos = positions[i]
