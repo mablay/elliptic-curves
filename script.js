@@ -9,6 +9,9 @@ function setup() {
   background(0)
   offset.x = (width / 2) / scale.x
   offset.y = (height / 2) / scale.y
+  const p = document.createElement('p')
+  p.innerHTML = 'Click on the curve to get started'
+  document.body.append(p)
 }
 
 function updateParam(param, value) {
@@ -22,10 +25,10 @@ function updateParam(param, value) {
 }
 
 function keyPressed() {
-  if (keyCode === LEFT_ARROW) {
+  if (keyCode === 189) {
     MAX_POS--
     positions.pop()
-  } else if (keyCode === RIGHT_ARROW) {
+  } else if (keyCode === 187) {
     MAX_POS++
   }
 }
