@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Elliptic Curve</title>
+<style>body {margin: 0; background-color: black; color: white}</style>
+</head>
+<body>
+  <span>a: </span><input
+    type="range"
+    min="-10"
+    max="10"
+    value="-1"
+    class="slider"
+    onchange="updateParam('a', this.value)"
+  />
+  </br>
+  <span>b: </span><input
+    type="range"
+    min="-10"
+    max="10"
+    step="0.2"
+    value="1"
+    class="slider"
+    onchange="updateParam('b', this.value)"
+  />
+  </br>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
