@@ -25,7 +25,6 @@ function setup () {
       MAX_POS = n
     })
   }
-  console.log('[setup] slider.a.value() =', window.sliders.a.value())
 
   // hint
   this.hint = createElement('p', 'Click on the curve to get started')
