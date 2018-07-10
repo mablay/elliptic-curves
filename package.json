@@ -1,10 +1,21 @@
 {
   "name": "elliptic-curve-playground",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.3.0",
+  "description": "visualises elliptic curves arithmetic",
   "main": "index.html",
-  "scripts": {},
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Marc Ablay",
+  "license": "ISC",
+  "dependencies": {
+    "p5": "^0.6.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
+  }
 }
