@@ -24,11 +24,23 @@ function drawCurve () {
   }
 }
 
+function drawConnections () {
+  for (let i = 1; i < positions.length; i++) {
+    const p1 = positions[i]
+    const p2 = positions[i - 1]
+    if (!p1 || !p2) continue
+    stroke(128)
+    projectLine(p1.x, p1.y, p2.x, p2.y)
+  }
+}
+
 function drawPositions () {
-  // stroke(200, 0, 0)
-  // positions.slice(0, 1).forEach(p => circle(p.x, p.y, 0.1))
   stroke(0, 200, 0)
-  positions.slice(0, positions.length - 1).forEach(p => circle(p.x, p.y, 0.1))
+  fill(0, 200, 0)
+  positions.slice(0, 1).forEach(p => circle(p.x, p.y, 0.12))
+  noFill()
+  stroke(0, 200, 0)
+  positions.slice(1, positions.length - 1).forEach(p => circle(p.x, p.y, 0.1))
   stroke(200, 0, 0)
   fill(200, 0, 0)
   positions.slice(positions.length - 1, positions.length).forEach(p => circle(p.x, p.y, 0.15))

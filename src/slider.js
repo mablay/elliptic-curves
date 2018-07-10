@@ -18,9 +18,10 @@ function createLabeledSlider (title, min, max, value, step, x, y, onChange = () 
     getValue: () => slider.value()
   }
 
-  function updateLabel () {
+  function updateLabel (e) {
     val.elt.innerHTML = slider.value()
     onChange(slider.value())
+    e.preventDefault()
   }
 
   function position (x, y) {

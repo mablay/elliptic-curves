@@ -15,9 +15,9 @@ function setup () {
   this.title.position(10, 0)
 
   this.sliders = {
-    a: createLabeledSlider('a', -10, 10, -1, 1, 14, 80, clearPositions),
-    b: createLabeledSlider('b', -10, 10, 1, 0.2, 14, 120, clearPositions),
-    n: createLabeledSlider('n', 3, 10, 3, 1, 14, 160, n => {
+    a: createLabeledSlider('a', -10, 10, -1, 1,   14, height - 160, clearPositions),
+    b: createLabeledSlider('b', -10, 10,  1, 0.2, 14, height - 120, clearPositions),
+    n: createLabeledSlider('n',   3, 10,  3, 1,   14, height - 80, n => {
       while(n < MAX_POS) {
         positions.pop()
         MAX_POS--
@@ -27,9 +27,15 @@ function setup () {
   }
 
   // hint
-  this.hint = createElement('p', 'Tap / mouse-over the curve to get started')
-  this.hint.position(10, height - 50)
-  this.hint.class('blink')
+  let hintText = ''
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    hintText = 'Tap the curve to get started'
+  } else {
+    hintText = 'Mouse-over the curve to get started'
+  }
+  this.hint = createElement('p', hintText)
+  this.hint.position(14, 50)
+  this.hint.class('blink hint')
   setTimeout(() => window.hint.removeClass('blink'), 1000)
 }
 
@@ -55,6 +61,7 @@ function keyPressed () {
 }
 
 function mouseMoved () {
+  if (isMouseInControlbox()) return
   if (positions.length === 0) return
   positions[1] = mouseIntersection() || positions[1]
 }
@@ -67,21 +74,24 @@ function draw () {
   drawCoordinates()
   drawCurve()
   generatePositions()
+  drawConnections()
   drawPositions()
   drawMouseIntersection()
 }
 
 function generatePositions () {
-  const pm = mouseIntersection()
-  if (!pm) return
-  positions[0] = pm
-  positions[1] = ec.intersectTangent(pm)
+  if (!isMouseInControlbox()) {
+    const pm = mouseIntersection()
+    if (!pm) return
+    positions[0] = pm
+    positions[1] = ec.intersectTangent(pm)
+  }
   if (positions.length < 2) return
   let old = positions[0]
   for (let i = 1; i < MAX_POS; i++) {
     const pos = positions[i]
-    stroke(128)
-    projectLine(old.x, old.y, pos.x, pos.y)
+    // stroke(128)
+    // projectLine(old.x, old.y, pos.x, pos.y)
     if (i === MAX_POS - 1) return
     positions[i + 1] = ec.add(old, pos)
     old = pos
@@ -100,7 +110,14 @@ function mouseDistance (p) {
   return Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2))
 }
 
+function isMouseInControlbox () {
+  // prevent position updates while user
+  // interacts with sliders
+  return (mouseX < 250 && height - mouseY < 170)
+}
+
 function mouseClicked() {
+  if (isMouseInControlbox()) return
   const pos = mouseIntersection()
   if (!pos) return
   if (mouseDistance(pos) > 0.6) return
