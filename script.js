@@ -1,7 +1,7 @@
 const scale = {x: 70, y: 70}
 const offset = {x: 0, y: 0}
 const positions = []
-let MAX_POS = 4
+let MAX_POS = 3
 const ec = new EllipticCurve(-1, 1)
 
 function setup () {
@@ -18,11 +18,11 @@ function setup () {
     a: createLabeledSlider('a', -10, 10, -1, 1, 14, 80, clearPositions),
     b: createLabeledSlider('b', -10, 10, 1, 0.2, 14, 120, clearPositions),
     n: createLabeledSlider('n', 3, 10, 3, 1, 14, 160, n => {
-      while(n + 1 < MAX_POS) {
+      while(n < MAX_POS) {
         positions.pop()
         MAX_POS--
       }
-      MAX_POS = n + 1
+      MAX_POS = n
     })
   }
   console.log('[setup] slider.a.value() =', window.sliders.a.value())
@@ -42,14 +42,11 @@ function keyPressed () {
     const n = window.sliders.n.getValue()
     if (n > 3) {
       window.sliders.n.setValue(n - 1)
-      MAX_POS--
-      positions.pop()
     }
   } else if (keyCode === 187) {
     const n = window.sliders.n.getValue()
     if (n < 10) {
       window.sliders.n.setValue(n + 1)
-      MAX_POS++
     }
   } else if (keyCode === 67) {
     clearPositions()
