@@ -1,10 +1,11 @@
 const scale = {x: 70, y: 70}
 const offset = {x: 0, y: 0}
-const params = {a: -1, b: 1}
+// const params = {a: -1, b: 1}
 const positions = []
 let MAX_POS = 4
+const ec = new EllipticCurve(-1, 1)
 
-function setup() {
+function setup () {
   createCanvas(480, 640)
   background(0)
   offset.x = (width / 2) / scale.x
@@ -21,7 +22,8 @@ function updateParam(param, value) {
     MAX_POS = value
     return
   }
-  params[param] = parseFloat(value)
+  ec[param] = parseFloat(value)
+  // params[param] = parseFloat(value)
 }
 
 function keyPressed() {
@@ -44,7 +46,7 @@ function mouseMoved() {
 function draw() {
   background(0)
   drawCoordinates()
-  drawCurve(params.a, params.b)
+  drawCurve()
   generatePositions()
   drawPositions()
   drawMouseIntersection()
@@ -65,23 +67,23 @@ function generatePositions () {
     stroke(128)
     projectLine(old.x, old.y, pos.x, pos.y)
     if (i === MAX_POS - 1) return
-    positions[i + 1] = add(old, pos)
+    positions[i + 1] = ec.add(old, pos)
     old = pos
   }
 }
 
-function add(p1, p2) {
-  const {x, y} = intersect(p1, p2)
-  return {x, y: -y}
-}
+// function add (p1, p2) {
+//   const {x, y} = intersect(p1, p2)
+//   return {x, y: -y}
+// }
 
-function intersect (p1, p2) {
-  const m = (p2.y - p1.y) / (p2.x - p1.x)
-  const h = p1.y - m * p1.x
-  const x3 = Math.pow(m, 2) - p1.x - p2.x
-  const y3 = m * x3 + h
-  return {x: x3, y: y3}
-}
+// function intersect (p1, p2) {
+//   const m = (p2.y - p1.y) / (p2.x - p1.x)
+//   const h = p1.y - m * p1.x
+//   const x3 = Math.pow(m, 2) - p1.x - p2.x
+//   const y3 = m * x3 + h
+//   return {x: x3, y: y3}
+// }
 
 function drawCoordinates () {
   stroke(32)
@@ -91,10 +93,8 @@ function drawCoordinates () {
 
 function mouseIntersection () {
   const x = mouseX / scale.x - offset.x
-  let y = ec(x, params.a, params.b)
-  if (y === null) return
-  if (mouseY < height / 2) y = -y
-  return {x, y}
+  const y = mouseY / scale.y - offset.y
+  return ec.nearestPoint({x, y})
 }
 
 function drawMouseIntersection () {
@@ -114,14 +114,14 @@ function mouseClicked() {
   positions[1] = pos
 }
 
-function drawCurve(a, b) {
+function drawCurve () {
   stroke(255)
   const X_MIN = -5
   const X_MAX = 5
   const STEP = 0.01
-  let y0 = ec(X_MIN, a, b)
+  let y0 = ec.value(X_MIN)
   for (let x = X_MIN + STEP; x <= X_MAX; x += STEP) {
-    let y = ec(x, a, b)
+    let y = ec.value(x)
     if (y === null) {
       if (y0 === 0) continue // skip irrational solutions
       y = 0
@@ -151,8 +151,8 @@ function circle (x, y, r) {
 }
 
 // elliptic curve: solve for y
-function ec(x, a, b) {
-  const ysqared = Math.pow(x, 3) + a * x + b
-  if (ysqared < 0) return null
-  return Math.sqrt(ysqared)
-}
+// function ec(x, a, b) {
+//   const ysqared = Math.pow(x, 3) + a * x + b
+//   if (ysqared < 0) return null
+//   return Math.sqrt(ysqared)
+// }
