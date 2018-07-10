@@ -109,3 +109,10 @@ function mouseClicked() {
   }
   positions[1] = pos
 }
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight)
+  offset.x = (width / 2) / scale.x
+  offset.y = (height / 2) / scale.y
+  this.hint.position(10, height - 50)
+}
