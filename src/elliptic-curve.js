@@ -26,6 +26,16 @@ class EllipticCurve {
     return {x, y: -y}
   }
 
+  // F(x) = (x^3 + ax + b)^0.5
+  // F'(x)= 0.5 * (x^3 + ax + b)^-0.5 * (3x^2 + a)
+  intersectTangent (p) {
+    const m = Math.sign(p.y) * (3 * Math.pow(p.x, 2) + this.a) / (2 * Math.sqrt(Math.pow(p.x, 3) + this.a * p.x + this.b))
+    const h = p.y - m * p.x
+    const x3 = Math.pow(m, 2) - 2 * p.x
+    const y3 = m * x3 + h
+    return {x: x3, y: y3}
+  }
+
   // TODO: nearestPoint for all x
   nearestPoint (p) {
     if (this.processing) return null

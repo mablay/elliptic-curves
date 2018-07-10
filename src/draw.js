@@ -25,10 +25,13 @@ function drawCurve () {
 }
 
 function drawPositions () {
-  stroke(200, 0, 0)
-  positions.slice(0,2).forEach(p => circle(p.x, p.y, 0.1))
+  // stroke(200, 0, 0)
+  // positions.slice(0, 1).forEach(p => circle(p.x, p.y, 0.1))
   stroke(0, 200, 0)
-  positions.slice(2).forEach(p => circle(p.x, p.y, 0.1))
+  positions.slice(0, positions.length - 1).forEach(p => circle(p.x, p.y, 0.1))
+  stroke(200, 0, 0)
+  fill(200, 0, 0)
+  positions.slice(positions.length - 1, positions.length).forEach(p => circle(p.x, p.y, 0.15))
 }
 
 function projectLine(x0, y0, x1, y1) {

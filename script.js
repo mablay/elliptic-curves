@@ -27,8 +27,10 @@ function setup () {
   }
 
   // hint
-  this.hint = createElement('p', 'Click on the curve to get started')
+  this.hint = createElement('p', 'Tap / mouse-over the curve to get started')
   this.hint.position(10, height - 50)
+  this.hint.class('blink')
+  setTimeout(() => window.hint.removeClass('blink'), 1000)
 }
 
 function clearPositions () {
@@ -70,6 +72,10 @@ function draw () {
 }
 
 function generatePositions () {
+  const pm = mouseIntersection()
+  if (!pm) return
+  positions[0] = pm
+  positions[1] = ec.intersectTangent(pm)
   if (positions.length < 2) return
   let old = positions[0]
   for (let i = 1; i < MAX_POS; i++) {
