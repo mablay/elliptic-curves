@@ -2,9 +2,10 @@
 <head>
 <title>Elliptic Curve</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>body {margin: 0; background-color: black; color: white}</style>
+<link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+  <!--
   <span>a: </span><input
     type="range"
     min="-10"
@@ -32,8 +33,12 @@
     onchange="updateParam('n', this.value)"
   />
   </br>
+-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js"></script>
   <script src="./src/elliptic-curve.js"></script>
+  <script src="./src/slider.js"></script>
   <script src="script.js"></script>
+  <script src="./src/draw.js"></script>
 </body>
 </html>

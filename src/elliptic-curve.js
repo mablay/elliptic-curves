@@ -4,6 +4,7 @@ class EllipticCurve {
   constructor (a, b) {
     this.a = a
     this.b = b
+    this.processing = false
   }
 
   value (x) {
@@ -27,6 +28,27 @@ class EllipticCurve {
 
   // TODO: nearestPoint for all x
   nearestPoint (p) {
+    if (this.processing) return null
+    let pNear = null
+    let dNear = Number.POSITIVE_INFINITY
+    this.processing = true
+    for (let dx = -1; dx <= 1; dx += 0.01) {
+      const pCandidate = this.yMagnet({
+        x: p.x + dx,
+        y: p.y
+      })
+      if (pCandidate === null) continue
+      const dCandidate = distSquare(p, pCandidate)
+      if (dCandidate < dNear) {
+        dNear = dCandidate
+        pNear = pCandidate
+      }
+    }
+    this.processing = false
+    return pNear
+  }
+
+  yMagnet (p) {
     const y = this.value(p.x)
     if (y === null) return null
     if (p.y > 0) {
@@ -35,4 +57,8 @@ class EllipticCurve {
       return {x: p.x, y: -y}
     }
   }
+}
+
+function distSquare (p1, p2) {
+  return Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)
 }

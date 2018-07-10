@@ -1,62 +1,76 @@
 const scale = {x: 70, y: 70}
 const offset = {x: 0, y: 0}
-// const params = {a: -1, b: 1}
 const positions = []
 let MAX_POS = 4
 const ec = new EllipticCurve(-1, 1)
 
 function setup () {
-  createCanvas(480, 640)
+  createCanvas(windowWidth, windowHeight)
   background(0)
   offset.x = (width / 2) / scale.x
   offset.y = (height / 2) / scale.y
-  const p = document.createElement('p')
-  p.innerHTML = 'Click on the curve to get started'
-  document.body.append(p)
-}
 
-function updateParam(param, value) {
-  background(0)
-  positions.length = 0
-  if (param === 'n') {
-    MAX_POS = value
-    return
+  // title
+  this.title = createElement('h1', 'Elliptic Curve Arithmetic')
+  this.title.position(10, 0)
+
+  this.sliders = {
+    a: createLabeledSlider('a', -10, 10, -1, 1, 14, 80, clearPositions),
+    b: createLabeledSlider('b', -10, 10, 1, 0.2, 14, 120, clearPositions),
+    n: createLabeledSlider('n', 3, 10, 3, 1, 14, 160, n => {
+      while(n + 1 < MAX_POS) {
+        positions.pop()
+        MAX_POS--
+      }
+      MAX_POS = n + 1
+    })
   }
-  ec[param] = parseFloat(value)
-  // params[param] = parseFloat(value)
+  console.log('[setup] slider.a.value() =', window.sliders.a.value())
+
+  // hint
+  this.hint = createElement('p', 'Click on the curve to get started')
+  this.hint.position(10, height - 50)
 }
 
-function keyPressed() {
+function clearPositions () {
+  while (positions.pop()) {}
+}
+
+function keyPressed () {
   // console.log(keyCode)
   if (keyCode === 189) {
-    MAX_POS--
-    positions.pop()
+    const n = window.sliders.n.getValue()
+    if (n > 3) {
+      window.sliders.n.setValue(n - 1)
+      MAX_POS--
+      positions.pop()
+    }
   } else if (keyCode === 187) {
-    MAX_POS++
+    const n = window.sliders.n.getValue()
+    if (n < 10) {
+      window.sliders.n.setValue(n + 1)
+      MAX_POS++
+    }
   } else if (keyCode === 67) {
-    positions.length = 0
+    clearPositions()
   }
 }
 
-function mouseMoved() {
+function mouseMoved () {
   if (positions.length === 0) return
   positions[1] = mouseIntersection() || positions[1]
 }
 
-function draw() {
+function draw () {
+  ec.a = window.sliders.a.value()
+  ec.b = window.sliders.b.value()
+  ec.n = window.sliders.n.value()
   background(0)
   drawCoordinates()
   drawCurve()
   generatePositions()
   drawPositions()
   drawMouseIntersection()
-}
-
-function drawPositions () {
-  stroke(200, 0, 0)
-  positions.slice(0,2).forEach(p => circle(p.x, p.y, 0.1))
-  stroke(0, 200, 0)
-  positions.slice(2).forEach(p => circle(p.x, p.y, 0.1))
 }
 
 function generatePositions () {
@@ -72,87 +86,24 @@ function generatePositions () {
   }
 }
 
-// function add (p1, p2) {
-//   const {x, y} = intersect(p1, p2)
-//   return {x, y: -y}
-// }
-
-// function intersect (p1, p2) {
-//   const m = (p2.y - p1.y) / (p2.x - p1.x)
-//   const h = p1.y - m * p1.x
-//   const x3 = Math.pow(m, 2) - p1.x - p2.x
-//   const y3 = m * x3 + h
-//   return {x: x3, y: y3}
-// }
-
-function drawCoordinates () {
-  stroke(32)
-  projectLine(-100, 0, 100, 0)
-  projectLine(0, -100, 0, 100)
-}
-
 function mouseIntersection () {
   const x = mouseX / scale.x - offset.x
   const y = mouseY / scale.y - offset.y
   return ec.nearestPoint({x, y})
 }
 
-function drawMouseIntersection () {
-  const pos = mouseIntersection()
-  if (!pos) return
-  stroke(200)
-  noFill()
-  circle(pos.x, pos.y, 0.2)
+function mouseDistance (p) {
+  const x = mouseX / scale.x - offset.x
+  const y = mouseY / scale.y - offset.y
+  return Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2))
 }
 
 function mouseClicked() {
   const pos = mouseIntersection()
   if (!pos) return
+  if (mouseDistance(pos) > 0.6) return
   if (positions.length === 0) {
     return positions.push(pos)
   }
   positions[1] = pos
 }
-
-function drawCurve () {
-  stroke(255)
-  const X_MIN = -5
-  const X_MAX = 5
-  const STEP = 0.01
-  let y0 = ec.value(X_MIN)
-  for (let x = X_MIN + STEP; x <= X_MAX; x += STEP) {
-    let y = ec.value(x)
-    if (y === null) {
-      if (y0 === 0) continue // skip irrational solutions
-      y = 0
-    }
-    projectLine(x - STEP, y0, x, y)
-    projectLine(x - STEP, -y0, x, -y)
-    y0 = y
-  }
-}
-
-function projectLine(x0, y0, x1, y1) {
-  line(
-    (x0 + offset.x) * scale.x,
-    (y0 + offset.y) * scale.y,
-    (x1 + offset.x) * scale.x,
-    (y1 + offset.y) * scale.y
-  )
-}
-
-function circle (x, y, r) {
-  ellipse(
-    (x + offset.x) * scale.x,
-    (y + offset.y) * scale.y,
-    r * scale.x,
-    r * scale.y
-  )
-}
-
-// elliptic curve: solve for y
-// function ec(x, a, b) {
-//   const ysqared = Math.pow(x, 3) + a * x + b
-//   if (ysqared < 0) return null
-//   return Math.sqrt(ysqared)
-// }
