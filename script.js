@@ -15,9 +15,9 @@ function setup () {
   this.title.position(10, 0)
 
   this.sliders = {
-    a: createLabeledSlider('a', -10, 10, -1, 1,   14, height - 160, clearPositions),
-    b: createLabeledSlider('b', -10, 10,  1, 0.2, 14, height - 120, clearPositions),
-    n: createLabeledSlider('n',   3, 10,  3, 1,   14, height - 80, n => {
+    a: createLabeledSlider('a', -10, 10, -1, 1,   14, height - 140, clearPositions),
+    b: createLabeledSlider('b', -10, 10,  1, 0.2, 14, height - 100, clearPositions),
+    n: createLabeledSlider('n',   3, 10,  3, 1,   14, height - 60, n => {
       while(n < MAX_POS) {
         positions.pop()
         MAX_POS--
@@ -113,7 +113,7 @@ function mouseDistance (p) {
 function isMouseInControlbox () {
   // prevent position updates while user
   // interacts with sliders
-  return (mouseX < 250 && height - mouseY < 170)
+  return (mouseX < 250 && height - mouseY < 150)
 }
 
 function mouseClicked() {
