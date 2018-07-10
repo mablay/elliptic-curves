@@ -33,7 +33,7 @@ class EllipticCurve {
     const h = p.y - m * p.x
     const x3 = Math.pow(m, 2) - 2 * p.x
     const y3 = m * x3 + h
-    return {x: x3, y: y3}
+    return {x: x3, y: -y3}
   }
 
   // TODO: nearestPoint for all x
